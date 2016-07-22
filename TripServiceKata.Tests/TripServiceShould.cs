@@ -36,9 +36,11 @@ namespace TripServiceKata.Tests
 		[TestMethod]
 		public void NotReturnAnyTripsWhenUsersAreNotFriends()
 		{
-			var stranger = new User.User();
-			stranger.AddFriend(AnotherUser);
-			stranger.AddTrip(ToBrazil);
+			var stranger = new UserBuilder()
+				.User()
+				.FriendsWith(AnotherUser)
+				.WithTrips(ToBrazil)
+				.Build();
 
 			var trips = _tripService.GetTripsByUser(stranger);
 
@@ -48,11 +50,11 @@ namespace TripServiceKata.Tests
 		[TestMethod]
 		public void ReturnFriendTripsWhenUsersAreFriends()
 		{
-			var friend = new User.User();
-			friend.AddFriend(AnotherUser);
-			friend.AddFriend(RegisteredUser);
-			friend.AddTrip(ToBrazil);
-			friend.AddTrip(ToLondon);
+			var friend = new UserBuilder()
+				.User()
+				.FriendsWith(AnotherUser, RegisteredUser)
+				.WithTrips(ToBrazil, ToLondon)
+				.Build();
 
 			var trips = _tripService.GetTripsByUser(friend);
 
