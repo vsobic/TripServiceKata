@@ -5,19 +5,19 @@ namespace TripServiceKata.Trip
 {
 	public class TripService
 	{
-		private ITripDao _tripDao;
+		private readonly ITripDao _tripDao;
 
 		public TripService(ITripDao tripDao)
 		{
-			this._tripDao = tripDao;
+			_tripDao = tripDao;
 		}
 
 		public List<Trip> GetTripsByUser(User.User user, User.User loggedInUser)
 		{
 			Validate(loggedInUser);
 
-			return user.IsFriendsWith(loggedInUser) 
-				? FindTripsBy(user) 
+			return user.IsFriendsWith(loggedInUser)
+				? FindTripsBy(user)
 				: NoTrips();
 		}
 
