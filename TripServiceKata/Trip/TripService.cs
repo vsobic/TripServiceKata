@@ -14,12 +14,24 @@ namespace TripServiceKata.Trip
 
 		public List<Trip> GetTripsByUser(User.User user, User.User loggedInUser)
 		{
+			Validate(loggedInUser);
+
+			return user.IsFriendsWith(loggedInUser) 
+				? FindTripsBy(user) 
+				: NoTrips();
+		}
+
+		private static List<Trip> NoTrips()
+		{
+			return new List<Trip>();
+		}
+
+		private static void Validate(User.User loggedInUser)
+		{
 			if (loggedInUser == null)
 			{
 				throw new UserNotLoggedInException();
 			}
-
-			return user.IsFriendsWith(loggedInUser) ? FindTripsBy(user) : new List<Trip>();
 		}
 
 		private List<Trip> FindTripsBy(User.User user)
