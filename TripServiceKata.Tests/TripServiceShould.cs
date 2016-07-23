@@ -8,7 +8,6 @@ namespace TripServiceKata.Tests
 	[TestClass]
 	public class TripServiceShould
 	{
-		private static User.User _loggedInUser;
 		private TripService _tripService;
 		private User.User Guest { get; } = null;
 		private User.User AnotherUser { get; } = new User.User();
@@ -20,7 +19,6 @@ namespace TripServiceKata.Tests
 		public void TestInitialize()
 		{
 			_tripService = new TestableTripService();
-			_loggedInUser = RegisteredUser;
 		}
 
 
@@ -28,9 +26,7 @@ namespace TripServiceKata.Tests
 		[ExpectedException(typeof (UserNotLoggedInException))]
 		public void ValidateTheLoggedInUser()
 		{
-			_loggedInUser = Guest;
-
-			_tripService.GetTripsByUser(AnotherUser);
+			_tripService.GetTripsByUser(AnotherUser, Guest);
 		}
 
 		[TestMethod]
@@ -42,7 +38,7 @@ namespace TripServiceKata.Tests
 				.WithTrips(ToBrazil)
 				.Build();
 
-			var trips = _tripService.GetTripsByUser(stranger);
+			var trips = _tripService.GetTripsByUser(stranger, RegisteredUser);
 
 			Assert.AreEqual(0, trips.Count);
 		}
@@ -56,18 +52,13 @@ namespace TripServiceKata.Tests
 				.WithTrips(ToBrazil, ToLondon)
 				.Build();
 
-			var trips = _tripService.GetTripsByUser(friend);
+			var trips = _tripService.GetTripsByUser(friend, RegisteredUser);
 
 			Assert.AreEqual(2, trips.Count);
 		}
 
 		private class TestableTripService : TripService
 		{
-			protected override User.User GetLoggedInUser()
-			{
-				return _loggedInUser;
-			}
-
 			protected override List<Trip.Trip> FindTripsBy(User.User user)
 			{
 				return user.Trips();
