@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using TripServiceKata.Exception;
 using TripServiceKata.Trip;
 
@@ -8,6 +8,7 @@ namespace TripServiceKata.Tests
 	[TestClass]
 	public class TripServiceShould
 	{
+		private readonly Mock<ITripDao> _tripDao = new Mock<ITripDao>();
 		private TripService _tripService;
 		private User.User Guest { get; } = null;
 		private User.User AnotherUser { get; } = new User.User();
@@ -18,7 +19,7 @@ namespace TripServiceKata.Tests
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			_tripService = new TestableTripService();
+			_tripService = new TripService(_tripDao.Object);
 		}
 
 
@@ -51,18 +52,11 @@ namespace TripServiceKata.Tests
 				.FriendsWith(AnotherUser, RegisteredUser)
 				.WithTrips(ToBrazil, ToLondon)
 				.Build();
+			_tripDao.Setup(t => t.TripsBy(friend)).Returns(friend.Trips);
 
 			var trips = _tripService.GetTripsByUser(friend, RegisteredUser);
 
 			Assert.AreEqual(2, trips.Count);
-		}
-
-		private class TestableTripService : TripService
-		{
-			protected override List<Trip.Trip> FindTripsBy(User.User user)
-			{
-				return user.Trips();
-			}
 		}
 	}
 }

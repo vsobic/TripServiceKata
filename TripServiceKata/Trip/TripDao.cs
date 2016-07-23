@@ -3,7 +3,12 @@ using TripServiceKata.Exception;
 
 namespace TripServiceKata.Trip
 {
-	public class TripDao
+	public interface ITripDao
+	{
+		List<Trip> TripsBy(User.User user);
+	}
+
+	public class TripDao : ITripDao
 	{
 		public static List<Trip> FindTripsByUser(User.User user)
 		{
