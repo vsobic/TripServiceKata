@@ -18,7 +18,7 @@ namespace TripServiceKata.Trip
 
 		public List<Trip> TripsBy(User.User user)
 		{
-			return TripDao.FindTripsByUser(user);
+			return FindTripsByUser(user);
 		}
 	}
 }
