@@ -1,6 +1,6 @@
 namespace TripServiceKata.Tests
 {
-	public class UserBuilder : Builder<User.User>
+	public class UserBuilder : IBuilder<User.User>
 	{
 		private User.User[] _friends = {};
 		private Trip.Trip[] _trips = {};
@@ -22,7 +22,7 @@ namespace TripServiceKata.Tests
 			return this;
 		}
 
-		public override User.User Build()
+		public User.User Build()
 		{
 			var user = new User.User();
 			AddFriendsTo(user);
