@@ -8,7 +8,7 @@ namespace TripServiceKata.Tests
 	[TestClass]
 	public class TripServiceShould
 	{
-		private readonly Mock<ITripDao> _tripDao = new Mock<ITripDao>();
+		private Mock<ITripDao> _tripDao;
 		private TripService _tripService;
 		private User.User Guest { get; } = null;
 		private User.User AnotherUser { get; } = new User.User();
@@ -19,6 +19,7 @@ namespace TripServiceKata.Tests
 		[TestInitialize]
 		public void TestInitialize()
 		{
+			_tripDao = new Mock<ITripDao>();
 			_tripService = new TripService(_tripDao.Object);
 		}
 
@@ -27,6 +28,7 @@ namespace TripServiceKata.Tests
 		[ExpectedException(typeof (UserNotLoggedInException))]
 		public void ValidateTheLoggedInUser()
 		{
+			_tripDao = new Mock<ITripDao>();
 			_tripService.GetTripsByUser(AnotherUser, Guest);
 		}
 
